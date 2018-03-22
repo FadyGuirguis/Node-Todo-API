@@ -39,7 +39,7 @@ describe('POST /todos', () => {
     request(app)
     .post('/todos')
     .send({
-      
+
     })
     .expect(400)
     .end((err, res) => {
@@ -55,5 +55,9 @@ describe('POST /todos', () => {
     });
   });
 
+
+});
+
+describe('GET /todos', () => {
 
 });
