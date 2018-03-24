@@ -15,7 +15,7 @@ var {User} = require('./models/user');
      text: req.body.text
    });
    newTodo.save().then((doc) => {
-     res.send(doc);
+     res.send({doc});
    }, (err) => {
      res.status(400).send(err);
    });
@@ -43,7 +43,7 @@ var {User} = require('./models/user');
          error: 'todo not found'
        });
      }
-     res.send(todo);
+     res.send({todo});
    }).catch((err) => {
      res.status(400).send({});
    });
