@@ -43,3 +43,21 @@ module.exports.getNote = (req, res) => {
     res.status(400).send({});
   });
 }
+
+module.exports.deleteNote = (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(404).send({
+      error: 'todo not found'
+    });
+  }
+  Todo.findByIdAndRemove(req.params.id)
+  .then((todo) => {
+    if (!todo) {
+      res.status(404).send();
+    }
+    res.send({todo});
+  })
+  .catch((err) => {
+    res.status(400).send({err});
+  })
+}

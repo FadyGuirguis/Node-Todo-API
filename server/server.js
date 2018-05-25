@@ -9,19 +9,21 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 var noteController = require('./controllers/noteController');
 
- var app = express();
+var app = express();
 
- app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 //routes
- app.post('/todos', noteController.postNote);
+app.post('/todos', noteController.postNote);
 
- app.get('/todos', noteController.getNotes);
+app.get('/todos', noteController.getNotes);
 
- app.get('/todos/:id', noteController.getNote);
+app.get('/todos/:id', noteController.getNote);
 
-  app.listen(3000, () => {
-    console.log("Server running on port 3000");
-  })
+app.delete('/todos/:id', noteController.deleteNote);
 
-  module.exports = {app};
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+})
+
+module.exports = {app};
