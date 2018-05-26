@@ -22,6 +22,9 @@ app.get('/todos/:id', noteController.getNote);
 
 app.delete('/todos/:id', noteController.deleteNote);
 
+app.patch('/todos/:id', noteController.editNote);
+
+
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 })

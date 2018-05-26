@@ -61,3 +61,27 @@ module.exports.deleteNote = (req, res) => {
     res.status(400).send({err});
   })
 }
+
+module.exports.editNote = (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) {
+    return res.status(404).send({
+      error: 'todo not found'
+    });
+  }
+    Todo.findByIdAndUpdate(req.params.id,
+      {
+        $set: {
+          text: req.body.text
+        }
+      }, {
+        new: true
+      }).then((todo) => {
+        if (!todo) {
+          res.status(404).send();
+        }
+        res.send({todo});
+      })
+      .catch((err) => {
+        res.status(400).send({err});
+      })
+}
