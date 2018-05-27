@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var {ObjectId} = require('mongodb');
 
 //interna files
+require('./config/config');
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');

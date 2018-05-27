@@ -1,5 +1,6 @@
 //modules
 var {ObjectId} = require('mongodb');
+const _ = require('lodash');
 
 //internal files
 var {Todo} = require('../models/todo');
@@ -53,11 +54,10 @@ module.exports.deleteNote = (req, res) => {
   Todo.findByIdAndRemove(req.params.id)
   .then((todo) => {
     if (!todo) {
-      res.status(404).send();
+      return res.status(404).send();
     }
     res.send({todo});
-  })
-  .catch((err) => {
+  }).catch((err) => {
     res.status(400).send({err});
   })
 }
@@ -77,11 +77,10 @@ module.exports.editNote = (req, res) => {
         new: true
       }).then((todo) => {
         if (!todo) {
-          res.status(404).send();
+          return res.status(404).send();
         }
         res.send({todo});
-      })
-      .catch((err) => {
+      }).catch((err) => {
         res.status(400).send({err});
       })
 }
