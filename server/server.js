@@ -9,6 +9,7 @@ var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 var noteController = require('./controllers/noteController');
+var userController = require('./controllers/userController');
 
 var app = express();
 
@@ -24,6 +25,8 @@ app.get('/todos/:id', noteController.getNote);
 app.delete('/todos/:id', noteController.deleteNote);
 
 app.patch('/todos/:id', noteController.editNote);
+
+app.post('/users', userController.postUser);
 
 
 app.listen(3000, () => {
