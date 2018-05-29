@@ -68,11 +68,19 @@ module.exports.editNote = (req, res) => {
       error: 'todo not found'
     });
   }
+
+  var body = _.pull(req.body, ['text', 'completed']);
+
+  if (_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date();
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+
     Todo.findByIdAndUpdate(req.params.id,
       {
-        $set: {
-          text: req.body.text
-        }
+        $set: body
       }, {
         new: true
       }).then((todo) => {

@@ -3,7 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var {ObjectId} = require('mongodb');
 
-//interna files
+//internal files
 require('./config/config');
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');

@@ -154,22 +154,27 @@ describe('DELETE /todos:id', () => {
 
 describe('PATCH /todos:id', () => {
 
-  it('should edit a todo', (done) => {
+  it('should set date if todo is completed', (done) => {
     var text = 'edited note';
     request(app)
     .patch('/todos/' + testTodos[0]._id.toHexString())
     .send({
-      text
+      text,
+      completed: true
     })
     .expect(200)
     .expect((res) => {
       expect(res.body.doc.text).toBe(text);
+      expect(res.body.doc.completed).toBeTruthy();
+      expect(res.body.doc.completedAt).toBeInstanceOf(Date);
     })
     .end((err, res) => {
       Todo.findOne({_id: testTodos[0]._id.toHexString() })
       .then((todo) => {
 
         expect(todo.text).toBe(text);
+        expect(todo.completed).toBeTruthy();
+        expect(todo.completedAt).toBeInstanceOf(Date);
         done();
       }).catch((err) => {
         done(err);
@@ -177,14 +182,34 @@ describe('PATCH /todos:id', () => {
     });
   });
 
-  it('should return 404 for todo not found', (done) => {
+  it('should nullify date if todo is not completed', (done) => {
+    var text = 'edited note';
     request(app)
-    .patch('/todos/' + new ObjectId().toHexString())
+    .patch('/todos/' + testTodos[0]._id.toHexString())
     .send({
-      text: 'edited text'
+      text,
+      completed: false
     })
-    .expect(404)
-    .end(done);
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.doc.text).toBe(text);
+      expect(res.body.doc.completed).toBeFalsy();
+      expect(res.body.doc.completedAt).toBeNull();
+    })
+    .end((err, res) => {
+      Todo.findOne({_id: testTodos[0]._id.toHexString() })
+      .then((todo) => {
+
+        expect(todo.text).toBe(text);
+        expect(todo.completed).toBeFalsy();
+        expect(todo.completedAt).toBeNull();
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
   });
+
+
 
 });
