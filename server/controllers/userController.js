@@ -25,6 +25,6 @@ module.exports.getMe = (req, res) => {
     }
     res.send({user});
   }).catch((err) => {
-    res.status(401).send(err);
+    res.status(401).send({});
   });
 }

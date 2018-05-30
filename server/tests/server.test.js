@@ -4,6 +4,7 @@ var {ObjectId} = require('mongodb');
 
 const {app} = require('../server');
 const {Todo} = require('../models/todo');
+const {User} = require('../models/user');
 const {testUsers, testTodos, populateUsers, populateTodos} =
 require('./seed/seed');
 
@@ -193,5 +194,97 @@ describe('PATCH /todos:id', () => {
   });
 
 
+
+});
+
+describe('GET /users/me', () => {
+
+  it('should return user if authenticated', (done) => {
+    request(app)
+    .get('/users/me')
+    .set('x-auth', testUsers[0].tokens[0].token)
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.user._id).toBe(testUsers[0]._id.toHexString());
+      expect(res.body.user.email).toBe(testUsers[0].email);
+    })
+    .end(done);
+  });
+
+  it('should return 401 if not authenticated', (done) => {
+    request(app)
+    .get('/users/me')
+    .expect(401)
+    .expect((res) => {
+      expect(res.body).toEqual({});
+    })
+    .end(done);
+  });
+
+});
+
+describe('POST /users', () => {
+
+  it('should create user', (done) => {
+    var email = 'fady97sameh@gmail.com';
+    var password = 'password';
+
+    request(app)
+    .post('/users')
+    .send({email, password})
+    .expect(200)
+    .expect((res) => {
+      expect(res.headers['x-auth']).toBeTruthy();
+      expect(res.body.user._id).toBeTruthy();
+      expect(res.body.user.email).toBe(email);
+    })
+    .end((err, res) => {
+      if (err) {
+        return done(err);
+      }
+      User.findOne({email})
+      .then((user) => {
+        expect(user).toBeTruthy();
+        expect(user.password).not.toBe(password);
+        expect(user.tokens.length).toBe(1);
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+  });
+
+  it('should return 400 if invalid email', (done) => {
+    var email = 'fady97samehgmail.com';
+    var password = 'password';
+
+    request(app)
+    .post('/users')
+    .send({email, password})
+    .expect(400)
+    .end(done);
+  });
+
+  it('should return 400 if password shorter than 8 characters', (done) => {
+    var email = 'fady97sameh@gmail.com';
+    var password = 'pass';
+
+    request(app)
+    .post('/users')
+    .send({email, password})
+    .expect(400)
+    .end(done);
+  });
+
+  it('should return 400 if eamil in use', (done) => {
+    var email = testUsers[0].email;
+    var password = 'password';
+
+    request(app)
+    .post('/users')
+    .send({email, password})
+    .expect(400)
+    .end(done);
+  });
 
 });
