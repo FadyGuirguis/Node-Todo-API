@@ -10,14 +10,14 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 var noteController = require('./controllers/noteController');
 var userController = require('./controllers/userController');
-var authenticate = require('./middleware/authenticate');
+var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
 
 app.use(bodyParser.json());
 
 //routes
-app.post('/todos', authenticate.authenticate, noteController.postNote);
+app.post('/todos', authenticate, noteController.postNote);
 
 app.get('/todos', noteController.getNotes);
 
