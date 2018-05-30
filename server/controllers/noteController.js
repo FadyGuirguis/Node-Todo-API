@@ -8,7 +8,8 @@ var {User} = require('../models/user');
 
 module.exports.postNote = (req, res) => {
   var newTodo = new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _creator: req.user._id
   });
   newTodo.save().then((doc) => {
     res.send({doc});
@@ -18,7 +19,9 @@ module.exports.postNote = (req, res) => {
 }
 
 module.exports.getNotes = (req, res) => {
-  Todo.find().then((todos) => {
+  Todo.find({
+    _creator: req.user._id
+  }).then((todos) => {
     res.send({
       todos
     });
@@ -33,7 +36,10 @@ module.exports.getNote = (req, res) => {
       error: 'todo not found'
     });
   }
-  Todo.findById(req.params.id).then((todo) => {
+  Todo.findOne({
+    _id: req.params.id,
+    _creator: req.user._id
+  }).then((todo) => {
     if (!todo) {
       return res.status(404).send({
         error: 'todo not found'
@@ -51,7 +57,10 @@ module.exports.deleteNote = (req, res) => {
       error: 'todo not found'
     });
   }
-  Todo.findByIdAndRemove(req.params.id)
+  Todo.findOneAndRemove({
+    _id: req.params.id,
+    _creator: req.user._id
+  })
   .then((todo) => {
     if (!todo) {
       return res.status(404).send();
@@ -78,7 +87,10 @@ module.exports.editNote = (req, res) => {
     body.completedAt = null;
   }
 
-    Todo.findByIdAndUpdate(req.params.id,
+    Todo.findOneAndUpdate({
+      _id: req.params.id,
+      _creator: req.user._id
+    },
       {
         $set: body
       }, {

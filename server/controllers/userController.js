@@ -18,15 +18,7 @@ module.exports.postUser = (req, res) => {
 };
 
 module.exports.getMe = (req, res) => {
-  var token = req.header('x-auth');
-  User.findByToken(token).then((user) => {
-    if (!user) {
-      return Promise.reject();
-    }
-    res.send({user});
-  }).catch((err) => {
-    res.status(401).send({});
-  });
+  res.send({user: req.user});
 };
 
 module.exports.login = (req, res) => {

@@ -17,19 +17,19 @@ var app = express();
 app.use(bodyParser.json());
 
 //routes
-app.post('/todos', noteController.postNote);
+app.post('/todos', authenticate, noteController.postNote);
 
-app.get('/todos', noteController.getNotes);
+app.get('/todos', authenticate, noteController.getNotes);
 
-app.get('/todos/:id', noteController.getNote);
+app.get('/todos/:id', authenticate, noteController.getNote);
 
-app.delete('/todos/:id', noteController.deleteNote);
+app.delete('/todos/:id', authenticate, noteController.deleteNote);
 
-app.patch('/todos/:id', noteController.editNote);
+app.patch('/todos/:id', authenticate, noteController.editNote);
 
 app.post('/users', userController.postUser);
 
-app.get('/users/me', userController.getMe);
+app.get('/users/me', authenticate, userController.getMe);
 
 app.post('/users/login', userController.login);
 

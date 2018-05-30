@@ -24,22 +24,31 @@ const testUsers = [
   {
     _id: user2ID,
     email: 'usertwo@gmail.com',
-    password: 'usertwopassword'
+    password: 'usertwopassword',
+    tokens: [
+      {
+        access: 'auth',
+        token: jwt.sign({_id: user2ID, access: 'auth'}, 'abc123').toString()
+      }
+    ]
   }
 ]
 
 const testTodos = [
   {
     _id: new ObjectId(),
-    text: 'first todo'
+    text: 'first todo',
+    _creator: user1ID
   },
   {
     _id: new ObjectId(),
-    text: 'second todo'
+    text: 'second todo',
+    _creator: user1ID
   },
   {
     _id: new ObjectId(),
-    text: 'third todo'
+    text: 'third todo',
+    _creator: user2ID
   }
 ];
 
