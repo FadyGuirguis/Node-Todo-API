@@ -17,7 +17,7 @@ var app = express();
 app.use(bodyParser.json());
 
 //routes
-app.post('/todos', authenticate, noteController.postNote);
+app.post('/todos', noteController.postNote);
 
 app.get('/todos', noteController.getNotes);
 
