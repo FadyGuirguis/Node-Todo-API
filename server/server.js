@@ -33,6 +33,8 @@ app.get('/users/me', userController.getMe);
 
 app.post('/users/login', userController.login);
 
+app.delete('/users/me/token', authenticate, userController.deleteToken);
+
 
 app.listen(3000, () => {
   console.log("Server running on port 3000");

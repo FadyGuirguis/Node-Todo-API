@@ -40,3 +40,12 @@ module.exports.login = (req, res) => {
     res.status(400).send({err: 'wrong email or password'});
   });
 };
+
+module.exports.deleteToken = (req, res) => {
+  req.user.removeToken(req.token)
+  .then(() => {
+    res.send({});
+  }).catch((err) => {
+    res.status(400).send({});
+  })
+};
