@@ -1,5 +1,6 @@
 const expect = require('expect');
 const request = require('supertest');
+const _ = require('lodash');
 var {ObjectId} = require('mongodb');
 
 const {app} = require('../server');
@@ -282,6 +283,56 @@ describe('POST /users', () => {
 
     request(app)
     .post('/users')
+    .send({email, password})
+    .expect(400)
+    .end(done);
+  });
+
+});
+
+describe('POST /user/login', () => {
+
+  it('should log user in if credentials are correct', (done) => {
+    request(app)
+    .post('/users/login')
+    .send(_.pick(testUsers[1], ['email', 'password']))
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.user._id).toBe(testUsers[1]._id.toHexString());
+      expect(res.body.user.email).toBe(testUsers[1].email);
+      expect(res.headers['x-auth']).toBeTruthy();
+    }).end((err, res) => {
+      if (err) {
+        return done(err);
+      }
+      User.findOne({email: testUsers[1].email})
+      .then((user) => {
+        expect(user).toBeTruthy();
+        expect(user.tokens.length).toBe(1);
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+  });
+
+  it('should return 400 if incorrect email', (done) => {
+    var email = 'ab' + testUsers[1].email;
+    var password = testUsers[1].password;
+
+    request(app)
+    .post('/users/login')
+    .send({email, password})
+    .expect(400)
+    .end(done);
+  });
+
+  it('should return 400 if incorrect password', (done) => {
+    var email = testUsers[1].email;
+    var password = testUsers[1].password + 'ab';
+
+    request(app)
+    .post('/users/login')
     .send({email, password})
     .expect(400)
     .end(done);

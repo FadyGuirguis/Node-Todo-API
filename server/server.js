@@ -31,6 +31,8 @@ app.post('/users', userController.postUser);
 
 app.get('/users/me', userController.getMe);
 
+app.post('/users/login', userController.login);
+
 
 app.listen(3000, () => {
   console.log("Server running on port 3000");
